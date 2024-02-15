@@ -19,6 +19,5 @@ function runonce {
 }
 
 runonce ${data_dir}/cellcycle cellcycle 10 1000000
-runonce ${data_dir}/metastasis metastasis 32 1000
 runonce ${data_dir}/Montagud2022_Prostate_Cancer Montagud 133 1000000
 runonce ${data_dir}/sizek sizek 87 1000000
