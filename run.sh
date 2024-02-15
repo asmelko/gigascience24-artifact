@@ -2,7 +2,7 @@
 
 # Build GPU version of MaBoSS
 cmake -DCMAKE_BUILD_TYPE=Release -DMAX_NODES=1024 -B build/MaBoSS-GPU -S repos/MaBoSSG
-cmake --build build/MaBoSS-GPU --target MaBoSSG
+cmake --build build/MaBoSS-GPU
 
 # Build CPU version of MaBoSS
 make -C repos/MaBoSS-env-2.0/engine/src clean

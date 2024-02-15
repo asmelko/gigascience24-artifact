@@ -1,3 +1,4 @@
 build/
 results/
 data-plots/*.pdf
+data/synth*
