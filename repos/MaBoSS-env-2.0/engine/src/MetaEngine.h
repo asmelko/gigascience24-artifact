@@ -66,6 +66,8 @@
 struct EnsembleArgWrapper;
 
 class MetaEngine {
+public:
+bool is_zero_rank = true;
 
 protected:
 
@@ -140,6 +142,7 @@ public:
   } else {
     sample_count = sample_count / world_size;
     statdist_trajcount = statdist_trajcount / world_size;
+    is_zero_rank = false;
   }
   
   thread_elapsed_runtimes.resize(world_size);
@@ -149,10 +152,10 @@ public:
   int name_len;
   MPI_Get_processor_name(processor_name, &name_len);
 
-  std::cout << "Hello world from processor " << processor_name 
-            << ", rank " << world_rank << " out of " << world_size << " processors. "
-            << "I will simulate " << sample_count << " out of " << global_sample_count << " simulations"
-            << std::endl;
+  // std::cout << "Hello world from processor " << processor_name 
+  //           << ", rank " << world_rank << " out of " << world_size << " processors. "
+  //           << "I will simulate " << sample_count << " out of " << global_sample_count << " simulations"
+  //           << std::endl;
 #endif
       
     }
