@@ -2,7 +2,7 @@
 
 build_dir=build/MaBoSS-CPU
 results_dir=results
-out_file=cpu_out_real
+out_file=cpu_out_real.csv
 data_dir=data
 
 threads_to_test="32 64"
@@ -17,7 +17,7 @@ function runonce {
     for r in {1..5}
     do
         printf "$2;$3;$4;$t;" >> ${results_dir}/${out_file}
-        ${build_dir}/MaBoSS_1024n ${1}.bnd -c ${1}.cfg -e thread_count=$t -o res | cut -f2 -d' ' | tr '\n' ';' >> ${results_dir}/${out_file}
+        ${build_dir}/MaBoSS_1024n ${1}.bnd -c ${1}.cfg -e thread_count=$t -o ${build_dir}/res | cut -f2 -d' ' | tr '\n' ';' >> ${results_dir}/${out_file}
         echo >> ${results_dir}/${out_file}
     done
   done

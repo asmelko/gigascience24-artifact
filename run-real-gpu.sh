@@ -1,13 +1,13 @@
 #!/bin/bash
 
-build_dir=build/MaBoSSG
+build_dir=build/MaBoSS-GPU
 results_dir=results
-out_file=gpu_out_real
+out_file=gpu_out_real.csv
 data_dir=data
 
 mkdir -p ${results_dir}
 
-echo "max_time;nodes;formula_size;sample_count;compilation;visualization;simulation;" > ${results_dir}/${out_file}
+echo "name;nodes;sample_count;compilation;visualization;simulation;" > ${results_dir}/${out_file}
 
 function runonce {
   for r in {1..5}
