@@ -47,6 +47,7 @@
   January-March 2011
 */
 
+#include <chrono>
 #include <ctime>
 #include "MaBEstEngine.h"
 #include "EnsembleEngine.h"
@@ -194,6 +195,9 @@ static void display(ProbTrajEngine* engine, Network* network, const char* prefix
 
 int run_ensemble_istates(std::vector<char *> ctbndl_files, std::vector<ConfigOpt> runconfig_file_or_expr_v, const char* output, OutputFormat format, bool hexfloat, bool save_individual_results, bool random_sampling) 
 {
+  std::chrono::time_point<std::chrono::system_clock> start_time_;
+	std::chrono::time_point<std::chrono::system_clock> end_time_;
+  
   time_t start_time, end_time;
      
   std::ostream* output_probtraj = NULL;
@@ -654,7 +658,9 @@ int main(int argc, char* argv[])
       ); 
       
     } else {
-        
+      
+      auto start_time_ = std::chrono::system_clock::now(); 
+
       Network* network = new Network();
 
       network->parse(ctbndl_file, NULL, false, use_sbml_names);
@@ -695,6 +701,12 @@ int main(int argc, char* argv[])
         network->generateLogicalExpressions(std::cout);
         return 0;
       }
+
+      // finish time measurement
+      auto end_time_ = std::chrono::system_clock::now(); 
+
+      // print time in millisecs
+      std::cout << "Parse: " << std::chrono::duration_cast<std::chrono::microseconds>(end_time_ - start_time_).count() << " us" << std::endl;
 
       if (generate_bnd_file) {
         network->display(std::cout);
@@ -744,11 +756,17 @@ int main(int argc, char* argv[])
         }
 
         time(&start_time);
+        start_time_ = std::chrono::system_clock::now(); 
         MaBEstEngine mabest(network, runconfig);
         mabest.run(output_traj);
+        end_time_ = std::chrono::system_clock::now(); 
+        std::cout << "Run: " << std::chrono::duration_cast<std::chrono::microseconds>(end_time_ - start_time_).count()  << " us" << std::endl;
         
+        start_time_ = std::chrono::system_clock::now(); 
         display(&mabest, network, output, format, hexfloat, -1);
-        
+        end_time_ = std::chrono::system_clock::now(); 
+        std::cout << "Display: " << std::chrono::duration_cast<std::chrono::microseconds>(end_time_ - start_time_).count()  << " us"
+                  << std::endl;
         time(&end_time);
 
         mabest.displayRunStats(*output_run, start_time, end_time);

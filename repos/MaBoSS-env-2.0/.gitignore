@@ -11,3 +11,16 @@ engine/src/MaBoSS-server
 __pycache__
 *.pyc
 *~
+
+engine/src/BooleanGrammar.cc
+engine/src/BooleanGrammar.output
+engine/src/BooleanGrammar.tab.c
+engine/src/depend.mk
+engine/src/RunConfigGrammar.cc
+engine/src/RunConfigGrammar.output
+engine/src/RunConfigGrammar.tab.c
+engine/src/lex.CTBNDL.cc
+engine/src/lex.RC.cc
+engine/src/maboss-config.h
+engine/src/MaBoSS_*n
+engine/src/libMaBoSS_*n.so
