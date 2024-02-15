@@ -166,3 +166,56 @@ for (m in c("NVIDIA RTX 3070 Laptop GPU", "NVIDIA Tesla A100 GPU"))
         theme + background_grid() + theme(legend.position="bottom", axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
     )
 }
+
+data <- read.table('mpi_real.tsv', header=T)
+data <- subset(data, algorithm %in% c('mpi', 'new'))
+
+data$algorithm <- factor(data$algorithm, levels=c('mpi', 'new'), labels=c('MPI', 'CPU'))
+
+ggsave("sizek_mpi.pdf", units="in", width=7, height=5,
+ggplot(data, aes(cpus, time, color=algorithm, shape=algorithm, group=algorithm)) +
+  geom_point() +
+  stat_smooth(geom='line', method='lm') +
+  scale_x_log10("Cores (log-scale)") +
+  scale_y_log10("Wall time (log-scale)", labels=c(expression('10'^1*' s'),expression('10'^2*' s'),expression('10'^3*' s'),expression('10'^4*' s')), breaks=c(10,100,1000,10000)) +
+  scale_color_brewer("Software", palette='Dark2') +
+  scale_shape("Software") +
+  theme_cowplot(font_size=9) +
+  theme(
+    panel.grid.major=element_line(size=.2, color='#cccccc'),
+  )
+)
+
+data <- read.table('mpi_synth.tsv', header=T)
+
+data$algorithm <- factor(data$algorithm, levels=c('mpi'), labels=c('MPI'))
+
+ggsave("synth_mpi.pdf", units="in", width=7, height=5,
+ggplot(data, aes(cpus, time, color=algorithm, shape=algorithm, group=algorithm)) +
+  geom_point() +
+  stat_smooth(geom='line', method='lm') +
+  scale_x_log10("Cores (log-scale)") +
+  scale_y_log10("Wall time (log-scale)", labels=c(expression('1 x 10'^3*' s'),expression('3 x 10'^3*' s'),expression('1 x 10'^4*' s'),expression('3 x 10'^4*' s')), breaks=c(1000,3000,10000,30000)) +
+  scale_color_brewer("Software", palette='Dark2') +
+  scale_shape("Software") +
+  theme_cowplot(font_size=9) +
+  theme(
+    panel.grid.major=element_line(size=.2, color='#cccccc'),
+  )
+)
+
+base = 69895
+
+ggsave("plots/synth_mpi_speedup.pdf", units="in", width=7, height=5,
+ggplot(data, aes(cpus, 32 *(base / time), color=algorithm, shape=algorithm, group=algorithm)) +
+  geom_point() +
+  stat_smooth(geom='line', method='lm') +
+  scale_x_log10("Cores (log-scale)") +
+  scale_y_log10("Speedup (log-scale)", labels = function (x) paste0(x,"x")) +
+  scale_color_brewer("Software", palette='Dark2') +
+  scale_shape("Software") +
+  theme_cowplot(font_size=9) +
+  theme(
+    panel.grid.major=element_line(size=.2, color='#cccccc'),
+  )
+)
