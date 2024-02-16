@@ -61,7 +61,7 @@ data_real = rbind(data_cpu_real, data_gpu_real)
         data_c <- transform(data_c, speedup = ifelse(norms$name == n, norm / total, speedup))
     }
 
-    ggsave("plots/real.pdf", device='pdf', units="in", scale=S, width=W, height=H,
+    ggsave("plots/real.pdf", device='pdf', units="in", scale=S, width=W / 2, height=H,
         ggplot(data_c, aes(x=type, y=total, fill=type)) +
         geom_bar(stat="identity", position=position_dodge()) +
         geom_errorbar(aes(ymin=total, ymax=(total - diff)), width=.1) + 
