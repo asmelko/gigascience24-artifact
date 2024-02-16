@@ -175,7 +175,7 @@ data$algorithm <- factor(data$algorithm, levels=c('mpi', 'new'), labels=c('MPI',
 ggsave("sizek_mpi.pdf", units="in", width=7, height=5,
 ggplot(data, aes(cpus, time, color=algorithm, shape=algorithm, group=algorithm)) +
   geom_point() +
-  stat_smooth(geom='line', method='lm') +
+  stat_smooth(geom='line', method='loess') +
   scale_x_log10("Cores (log-scale)") +
   scale_y_log10("Wall time (log-scale)", labels=c(expression('10'^1*' s'),expression('10'^2*' s'),expression('10'^3*' s'),expression('10'^4*' s')), breaks=c(10,100,1000,10000)) +
   scale_color_brewer("Software", palette='Dark2') +

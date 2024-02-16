@@ -31,3 +31,12 @@ echo Running GPU version of MaBoSS on synthetic data
 
 echo Running CPU version of MaBoSS on synthetic data
 ./run-synth-cpu.sh
+
+echo Running MPI version of MaBoSS on real data
+./run-real-mpi.sh
+
+echo Running MPI version of MaBoSS on synthetic data
+./run-synth-mpi.sh
+
+echo Plotting results
+Rscript plots.R
