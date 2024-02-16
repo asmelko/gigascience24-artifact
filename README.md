@@ -29,6 +29,7 @@ Both implementations must be passed the maximum number of supported model nodes 
 Hardware requirements:
 
 * A CUDA-compatible GPU
+* A (homogeneous) CPU cluster
 
 Software requirements:
 
@@ -36,17 +37,18 @@ Software requirements:
 * `cmake 3.18` or later 
 * `flex` and `bison` libraries
 * `R` software for plotting the graphs (see details below)
+* an MPI implementation, such as `mpich`
 
 Let us present a few commands for your convenience that will allow you to set up the environment quickly:
 
 Installing all dependencies (except CUDA and GPU driver) on Debian/Ubuntu:
 ```
-sudo apt-get update && apt-get install -y g++ cmake r-base flex bison
+sudo apt-get update && apt-get install -y g++ cmake r-base flex bison mpich
 ```
 
 Installing all dependencies (except CUDA and GPU driver) on RHEL-like distribution:
 ```
-sudo dnf install -y cmake gcc-c++ R flex bison
+sudo dnf install -y cmake gcc-c++ R flex bison mpich
 ```
 
 R packages necessary for generating the plots:
@@ -67,7 +69,7 @@ Just to see whether the code is working, run the following from the root directo
 ```
 ./kick-the-tires.sh
 ```
-The script should take about 10 minutes to finish. The script runs a subset of GPU experiments. 
+The script should take about 10 minutes to finish. The script runs a subset of GPU experiments.
 
 After the script runs, it will generate results in a CSV format in the `results` directory. It should contain 2 CSV files for CPU and GPU benchmark respectively. Each CSV file contains self-documenting headers. Finally, the plotting script is executed generating a single plot in the `plots` directory. 
 More details on how the CSV results rows are processed into plots can be found in the `plots/plots-fast.R` script.
