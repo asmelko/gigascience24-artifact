@@ -19,7 +19,7 @@ average <- function(data)
     data["total"] = data["compilation"] + data["visualization"] + data["simulation"]
     data <- subset(data, select = -X)
 
-    data_s <- split(data, paste0(data$max_time, data$nodes, data$formula_size, data$sample_count))
+    data_s <- split(data, paste0(data$max_time, data$nodes, data$formula_size, data$sample_count, data$threads, data$mpi_nodes, data$algorithm))
     data <- NULL
     for (i in 1:length(data_s)){
         tmp = subset(data_s[[i]], !(total %in% boxplot(data_s[[i]]$total, plot = FALSE)$out))
@@ -29,10 +29,10 @@ average <- function(data)
     data = data.frame(data %>% group_by_at(names(data)[-grep("(total)|(compilation)|(visualization)|(simulation)", names(data))]) %>% summarise(total = mean(total), compilation = mean(compilation), visualization = mean(visualization), simulation = mean(simulation)))
 }
 
-data_gpu = read.csv('gpu_out_synth.csv', header=T, sep=';')
+data_gpu = read.csv('results/gpu_out_synth.csv', header=T, sep=';')
 data_gpu = average(data_gpu)
 
-data_cpu = read.csv('cpu_out_synth.csv', header=T, sep=';')
+data_cpu = read.csv('results/cpu_out_synth.csv', header=T, sep=';')
 names(data_cpu)[names(data_cpu) == "parsing"] <- "compilation"
 data_cpu = subset(data_cpu, select = -threads)
 data_cpu = average(data_cpu)
@@ -41,11 +41,10 @@ data_cpu["type"] = "CPU"
 data_gpu["type"] = "GPU"
 data = rbind(data_cpu, data_gpu)
 
-
-data_gpu_real = read.csv('gpu_out_real.csv', header=T, sep=';')
+data_gpu_real = read.csv('results/gpu_out_real.csv', header=T, sep=';')
 data_gpu_real = average(data_gpu_real)
 
-data_cpu_real = read.csv('cpu_out_real.csv', header=T, sep=';')
+data_cpu_real = read.csv('results/cpu_out_real.csv', header=T, sep=';')
 names(data_cpu_real)[names(data_cpu_real) == "parsing"] <- "compilation"
 data_cpu_real = subset(data_cpu_real, threads == 64) # modify here, which thread count to plot
 data_cpu_real = subset(data_cpu_real, select = -threads)
@@ -72,7 +71,7 @@ data_real = rbind(data_cpu_real, data_gpu_real)
 
     data_c = rbind(data_x, data_y)
 
-    ggsave("nodes.pdf", device='pdf', units="in", scale=S, width=W, height=H,
+    ggsave("results/nodes.pdf", device='pdf', units="in", scale=S, width=W, height=H,
         ggplot(data_c, aes(x=nodes,y=total, color=factor(type), shape=factor(type))) +
         geom_point(size=point_size) +
         geom_line(linewidth=line_size) +
@@ -102,7 +101,7 @@ data_real = rbind(data_cpu_real, data_gpu_real)
 
     data_c$sample_count = factor(c("4M", "6M", "8M", "10M"), levels=c("4M", "6M", "8M", "10M"))
 
-    ggsave("nodes-compilation-big.pdf", device='pdf', units="in", scale=S, width=W, height=H,
+    ggsave("results/nodes-compilation-big.pdf", device='pdf', units="in", scale=S, width=W, height=H,
         ggplot(data_c, aes(x=nodes,y=ratio, color=sample_count, shape=sample_count)) +
         geom_point(size=point_size) +
         geom_line(linewidth=line_size) +
@@ -131,13 +130,13 @@ data_real = rbind(data_cpu_real, data_gpu_real)
 
     for (n in c("cellcycle", "Montagud", "sizek"))
     {
-        norm = as.numeric(norms[norms$type == "Intel Xeon Gold 6130 CPU" & norms$name == n, ]["total"])
+        norm = as.numeric(norms[norms$type == "CPU" & norms$name == n, ]["total"])
         data_c <- transform(data_c, nn = ifelse(norms$name == n, norm, nn))
         data_c <- transform(data_c, diff = ifelse(norms$name == n, total - norm, diff))
         data_c <- transform(data_c, speedup = ifelse(norms$name == n, norm / total, speedup))
     }
 
-    ggsave("real.pdf", device='pdf', units="in", scale=S, width=W, height=H,
+    ggsave("results/real.pdf", device='pdf', units="in", scale=S, width=W, height=H,
         ggplot(data_c, aes(x=type, y=total, fill=type)) +
         geom_bar(stat="identity", position=position_dodge()) +
         geom_errorbar(aes(ymin=total, ymax=(total - diff)), width=.1) + 
@@ -152,3 +151,63 @@ data_real = rbind(data_cpu_real, data_gpu_real)
         theme + background_grid() + theme(legend.position="bottom", axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
     )
 }
+
+data_mpi = read.csv('results/mpi_out_real.csv', header=T, sep=';')
+names(data_mpi)[names(data_mpi) == "parsing"] <- "compilation"
+data_mpi = average(data_mpi)
+
+data_mpi["algorithm"] = "MPI"
+
+ggsave("results/sizek_mpi.pdf", units="in", width=7, height=5,
+ggplot(data_mpi, aes(threads * mpi_nodes, total, color=algorithm, shape=algorithm, group=algorithm)) +
+  geom_point() +
+  stat_smooth(geom='line', method='lm') +
+  scale_x_log10("Cores (log-scale)") +
+  scale_y_log10("Wall time (log-scale)") +
+  scale_color_brewer("Software", palette='Dark2') +
+  scale_shape("Software") +
+  theme_cowplot(font_size=9) +
+  theme(
+    panel.grid.major=element_line(size=.2, color='#cccccc'),
+  )
+)
+
+data_mpi = read.csv('results/mpi_out_synth.csv', header=T, sep=';')
+names(data_mpi)[names(data_mpi) == "parsing"] <- "compilation"
+data_mpi = average(data_mpi)
+
+data_mpi["algorithm"] = "MPI"
+
+ggsave("results/synth_mpi.pdf", units="in", width=7, height=5,
+ggplot(data_mpi, aes(threads * mpi_nodes, total, color=algorithm, shape=algorithm, group=algorithm)) +
+  geom_point() +
+  stat_smooth(geom='line', method='lm') +
+  scale_x_log10("Cores (log-scale)") +
+  scale_y_log10("Wall time (log-scale)") +
+  scale_color_brewer("Software", palette='Dark2') +
+  scale_shape("Software") +
+  theme_cowplot(font_size=9) +
+  theme(
+    panel.grid.major=element_line(size=.2, color='#cccccc'),
+  )
+)
+
+data_mpi["cpus"] = data_mpi["threads"] * data_mpi["mpi_nodes"]
+min_cpus = min(data_mpi["cpus"])
+min_cpus_time = data_mpi[data_mpi["cpus"] == min_cpus, "total"]
+
+print(data_mpi)
+
+ggsave("results/synth_mpi_speedup.pdf", units="in", width=7, height=5,
+ggplot(data_mpi, aes(cpus, min_cpus *(min_cpus_time / total), color=algorithm, shape=algorithm, group=algorithm)) +
+  geom_point() +
+  stat_smooth(geom='line', method='lm') +
+  scale_x_log10("Cores (log-scale)") +
+  scale_y_log10("Speedup (log-scale)", labels = function (x) paste0(x,"x")) +
+  scale_color_brewer("Software", palette='Dark2') +
+  scale_shape("Software") +
+  theme_cowplot(font_size=9) +
+  theme(
+    panel.grid.major=element_line(size=.2, color='#cccccc'),
+  )
+)

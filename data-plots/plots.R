@@ -206,7 +206,7 @@ ggplot(data, aes(cpus, time, color=algorithm, shape=algorithm, group=algorithm))
 
 base = 69895
 
-ggsave("plots/synth_mpi_speedup.pdf", units="in", width=7, height=5,
+ggsave("synth_mpi_speedup.pdf", units="in", width=7, height=5,
 ggplot(data, aes(cpus, 32 *(base / time), color=algorithm, shape=algorithm, group=algorithm)) +
   geom_point() +
   stat_smooth(geom='line', method='lm') +
