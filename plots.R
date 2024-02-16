@@ -196,8 +196,6 @@ data_mpi["cpus"] = data_mpi["threads"] * data_mpi["mpi_nodes"]
 min_cpus = min(data_mpi["cpus"])
 min_cpus_time = data_mpi[data_mpi["cpus"] == min_cpus, "total"]
 
-print(data_mpi)
-
 ggsave("results/synth_mpi_speedup.pdf", units="in", width=7, height=5,
 ggplot(data_mpi, aes(cpus, min_cpus *(min_cpus_time / total), color=algorithm, shape=algorithm, group=algorithm)) +
   geom_point() +

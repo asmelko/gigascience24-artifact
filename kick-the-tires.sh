@@ -26,12 +26,15 @@ mkdir -p ${results_dir}
 echo "name;nodes;sample_count;compilation;visualization;simulation;" > ${results_dir}/${out_file}
 
 function runonce {
+  printf "Running GPU $1 5 times "
   for r in {1..5}
   do
     printf "$2;$3;$4;" >> ${results_dir}/${out_file}
     ${build_dir}/MaBoSSG ${1}.bnd ${1}.cfg  2>&1 | grep "main>" | tail -n3 | cut -c52-62 | awk '{$1=$1;print}' | tr '\n' ';' >> ${results_dir}/${out_file}
     echo >> ${results_dir}/${out_file}
+    printf "."
   done
+  printf " done\n"
 }
 
 runonce ${data_dir}/cellcycle cellcycle 10 1000000
@@ -52,6 +55,7 @@ mkdir -p ${results_dir}
 echo "name;nodes;sample_count;threads;parsing;simulation;visualization;" > ${results_dir}/${out_file}
 
 function runonce {
+  printf "Running CPU $1 5 times "
   for t in ${threads_to_test}
   do
     for r in {1..5}
@@ -59,8 +63,10 @@ function runonce {
         printf "$2;$3;$4;$t;" >> ${results_dir}/${out_file}
         ${build_dir}/MaBoSS_1024n ${1}.bnd -c ${1}.cfg -e thread_count=$t -o ${build_dir}/res | cut -f2 -d' ' | tr '\n' ';' >> ${results_dir}/${out_file}
         echo >> ${results_dir}/${out_file}
+        printf "."
     done
   done
+  printf " done\n"
 }
 
 runonce ${data_dir}/cellcycle cellcycle 10 1000000
