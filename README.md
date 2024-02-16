@@ -1,4 +1,4 @@
-# Artifact Submission: MaBoSS
+# Artifact Submission: HPC MaBoSS 
 
 This is a replication package containing code and experimental results related to a GigaScience paper titled: MaBoSS for HPC environments: Implementations of the continuous time Boolean model simulator for large CPU clusters and GPU accelerators.
 
@@ -6,10 +6,10 @@ This is a replication package containing code and experimental results related t
 
 The artifact comprises the following directories:
 
-* `data` -- the (`bnd`, `cfg`) model pairs on which the benchmarks were run
 * `benchmark` -- benchmarking scripts
+* `data` -- the (`bnd`, `cfg`) model pairs on which the benchmarks were run
 * `plots` -- scripts for generating results plots	
-* `presented-results` -- containing plots (including some that were not included in the paper), CSV data files with measurements (that were used to generate the plots) and R script that generated the plots
+* `presented-results` -- plots (including some that were not included in the paper), CSV data files with measurements and R script that generated the plots from the data
 * `repos` -- all the implementations of cross-correlation
   - `MaBoSSG` -- GPU code (located under `src`)
   - `MaBoSS-env-2.0` -- CPU and MPI code (located under `engine/src`)
@@ -17,11 +17,9 @@ The artifact comprises the following directories:
 
 ## Detailed artifact contents
 
-`repo/MaBoSSG/src` directory contains the source files to the CUDA kernels. Notably, the runtime compilation optimization can be viewed in `kernel_compiler.h` and `generator.h` files.
+`repo/MaBoSSG/src` directory contains the source files to the CUDA kernels. Notably, the runtime compilation optimization can be viewed in `kernel_compiler.h/cpp` and `generator.h/cpp` source files, the simulation part in `jit_kernels/simulation.cu` and the stats computation part in `jit_kernels/final_states.cu` and `jit_kernels/window_average_small.cu`.
 
-MPI implementation of CPU MaBoSS code can be found by searching for `MPI_COMPAT` in `repo/MaBoSS-env-2.0/engine/src` directory.
-
-Both implementations must be passed the maximum number of supported model nodes during the compilation (see `run.sh`).
+MPI implementation of CPU MaBoSS code can be found by searching for the `MPI_COMPAT` keyword in `repo/MaBoSS-env-2.0/engine/src` directory.
 
 
 ## Requirements for running the experiments
@@ -34,10 +32,10 @@ Hardware requirements:
 Software requirements:
 
 * [CUDA toolkit 12.2 or later](https://developer.nvidia.com/cuda-downloads) and appropriate driver
+* an MPI implementation, such as `mpich`
 * `cmake 3.18` or later 
 * `flex` and `bison` libraries
 * `R` software for plotting the graphs (see details below)
-* an MPI implementation, such as `mpich`
 
 Let us present a few commands for your convenience that will allow you to set up the environment quickly:
 
@@ -90,10 +88,10 @@ The measured data and plots were stored in the `presented-results` directory. Th
 
 | Plot | Description | Figure number in paper |
 | --------------------------- | ----------- | -- |
-| `real.pdf`| GPU benchmark on real-world dataset | Figure 15
-| `sizek_mpi.pdf`| MPI benchmark on real-world dataset | not included 
-| `synth_mpi_speedup.pdf`| MPI speedup on synthetic dataset | Figure 16 
-| `synth_mpi.pdf`| MPI wall time on synthetic dataset | Figure 17
-| `nodes.pdf`|GPU benchmark on synthetic dataset |  not included
+| `real.pdf`| GPU benchmark on real-world dataset | Figure 1
+| `sizek_mpi.pdf`| MPI benchmark on real-world dataset | Figure 4 
+| `synth_mpi_speedup.pdf`| MPI speedup on synthetic dataset | Figure 5
+| `synth_mpi.pdf`| MPI wall time on synthetic dataset | not included
+| `nodes.pdf`|GPU benchmark on synthetic dataset |  Figure 2
 | `nodes-compilation-big-NVIDIA RTX 3070 Laptop GPU.pdf`| Laptop GPU runtime compilation benchmark |   not included
-| `nodes-compilation-big-NVIDIA Tesla A100 GPU.pdf`| Datacenter-grade GPU runtime compilation benchmark |  not included
+| `nodes-compilation-big-NVIDIA Tesla A100 GPU.pdf`| Datacenter-grade GPU runtime compilation benchmark |  Figure 3
