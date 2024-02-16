@@ -29,10 +29,10 @@ average <- function(data)
     data = data.frame(data %>% group_by_at(names(data)[-grep("(total)|(compilation)|(visualization)|(simulation)", names(data))]) %>% summarise(total = mean(total), compilation = mean(compilation), visualization = mean(visualization), simulation = mean(simulation)))
 }
 
-data_gpu = read.csv('gpu_out.csv', header=T, sep=';')
+data_gpu = read.csv('gpu_out_synth.csv', header=T, sep=';')
 data_gpu = average(data_gpu)
 
-data_cpu = read.csv('cpu_out.csv', header=T, sep=';')
+data_cpu = read.csv('cpu_out_synth.csv', header=T, sep=';')
 names(data_cpu)[names(data_cpu) == "parsing"] <- "compilation"
 data_cpu = subset(data_cpu, select = -threads)
 data_cpu = average(data_cpu)
@@ -47,7 +47,7 @@ data_gpu_real = average(data_gpu_real)
 
 data_cpu_real = read.csv('cpu_out_real.csv', header=T, sep=';')
 names(data_cpu_real)[names(data_cpu_real) == "parsing"] <- "compilation"
-data_cpu_real = subset(data_cpu_real, threads == 64)
+data_cpu_real = subset(data_cpu_real, threads == 64) # modify here, which thread count to plot
 data_cpu_real = subset(data_cpu_real, select = -threads)
 data_cpu_real = average(data_cpu_real)
 
@@ -102,7 +102,7 @@ data_real = rbind(data_cpu_real, data_gpu_real)
 
     data_c$sample_count = factor(c("4M", "6M", "8M", "10M"), levels=c("4M", "6M", "8M", "10M"))
 
-    ggsave(paste0("nodes-compilation-big", ".pdf"), device='pdf', units="in", scale=S, width=W, height=H,
+    ggsave("nodes-compilation-big.pdf", device='pdf', units="in", scale=S, width=W, height=H,
         ggplot(data_c, aes(x=nodes,y=ratio, color=sample_count, shape=sample_count)) +
         geom_point(size=point_size) +
         geom_line(linewidth=line_size) +
