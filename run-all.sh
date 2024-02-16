@@ -18,25 +18,25 @@ cp repos/MaBoSS-env-2.0/engine/src/MaBoSS_1024n build/MaBoSS-MPI/MaBoSS_1024n
 
 
 echo Running GPU version of MaBoSS on real data
-./run-real-gpu.sh
+./benchmark/run-real-gpu.sh
 
 echo Running CPU version of MaBoSS on real data
-./run-real-cpu.sh
+./benchmark/run-real-cpu.sh
 
 echo Creating synthetic data
 ./make-data.sh
 
 echo Running GPU version of MaBoSS on synthetic data
-./run-synth-gpu.sh
+./benchmark/run-synth-gpu.sh
 
 echo Running CPU version of MaBoSS on synthetic data
-./run-synth-cpu.sh
+./benchmark/run-synth-cpu.sh
 
 echo Running MPI version of MaBoSS on real data
-./run-real-mpi.sh
+./benchmark/run-real-mpi.sh
 
 echo Running MPI version of MaBoSS on synthetic data
-./run-synth-mpi.sh
+./benchmark/run-synth-mpi.sh
 
 echo Plotting results
-Rscript plots.R
+Rscript plots/plots.R

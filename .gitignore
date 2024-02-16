@@ -2,3 +2,4 @@ build/
 results/
 data-plots/*.pdf
 data/synth*
+plots/*.pdf

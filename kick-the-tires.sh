@@ -73,4 +73,4 @@ runonce ${data_dir}/cellcycle cellcycle 10 1000000
 
 ########## Run CPU cellcycle ##########
 
-Rscript plots-fast.R
+Rscript plots/plots-fast.R

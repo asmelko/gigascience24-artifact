@@ -19,7 +19,7 @@ average <- function(data)
     data["total"] = data["compilation"] + data["visualization"] + data["simulation"]
     data <- subset(data, select = -X)
 
-    data_s <- split(data, paste0(data$max_time, data$nodes, data$formula_size, data$sample_count, data$threads, data$mpi_nodes, data$algorithm))
+    data_s <- split(data, paste0(data$max_time, data$nodes, data$formula_size, data$sample_count))
     data <- NULL
     for (i in 1:length(data_s)){
         tmp = subset(data_s[[i]], !(total %in% boxplot(data_s[[i]]$total, plot = FALSE)$out))
@@ -29,30 +29,43 @@ average <- function(data)
     data = data.frame(data %>% group_by_at(names(data)[-grep("(total)|(compilation)|(visualization)|(simulation)", names(data))]) %>% summarise(total = mean(total), compilation = mean(compilation), visualization = mean(visualization), simulation = mean(simulation)))
 }
 
-data_gpu = read.csv('results/gpu_out_synth.csv', header=T, sep=';')
+data_gpu = read.csv('data/gpu_out.csv', header=T, sep=';')
 data_gpu = average(data_gpu)
 
-data_cpu = read.csv('results/cpu_out_synth.csv', header=T, sep=';')
+data_v100 = read.csv('data/gpu_out_v100.csv', header=T, sep=';')
+data_v100 = average(data_v100)
+
+data_a100 = read.csv('data/gpu_out_a100.csv', header=T, sep=';')
+data_a100 = average(data_a100)
+
+data_cpu = read.csv('data/cpu_out.csv', header=T, sep=';')
 names(data_cpu)[names(data_cpu) == "parsing"] <- "compilation"
 data_cpu = subset(data_cpu, select = -threads)
 data_cpu = average(data_cpu)
 
-data_cpu["type"] = "CPU"
-data_gpu["type"] = "GPU"
-data = rbind(data_cpu, data_gpu)
+data_cpu["type"] = "Intel Xeon Gold 6130 CPU"
+data_gpu["type"] = "NVIDIA RTX 3070 Laptop GPU"
+data_v100["type"] = "NVIDIA Tesla V100 GPU"
+data_a100["type"] = "NVIDIA Tesla A100 GPU"
+data = rbind(data_cpu, data_gpu, data_a100)
 
-data_gpu_real = read.csv('results/gpu_out_real.csv', header=T, sep=';')
+
+data_gpu_real = read.csv('data/gpu_out_real.csv', header=T, sep=';')
 data_gpu_real = average(data_gpu_real)
 
-data_cpu_real = read.csv('results/cpu_out_real.csv', header=T, sep=';')
+data_a100_real = read.csv('data/gpu_out_real_a100.csv', header=T, sep=';')
+data_a100_real = average(data_a100_real)
+
+data_cpu_real = read.csv('data/cpu_out_real.csv', header=T, sep=';')
 names(data_cpu_real)[names(data_cpu_real) == "parsing"] <- "compilation"
-data_cpu_real = subset(data_cpu_real, threads == 64) # modify here, which thread count to plot
+data_cpu_real = subset(data_cpu_real, threads == 64)
 data_cpu_real = subset(data_cpu_real, select = -threads)
 data_cpu_real = average(data_cpu_real)
 
-data_cpu_real["type"] = "CPU"
-data_gpu_real["type"] = "GPU"
-data_real = rbind(data_cpu_real, data_gpu_real)
+data_cpu_real["type"] = "Intel Xeon Gold 6130 CPU"
+data_gpu_real["type"] = "NVIDIA RTX 3070 Laptop GPU"
+data_a100_real["type"] = "NVIDIA Tesla A100 GPU"
+data_real = rbind(data_cpu_real, data_gpu_real, data_a100_real)
 
 {
     data_c = data
@@ -71,7 +84,7 @@ data_real = rbind(data_cpu_real, data_gpu_real)
 
     data_c = rbind(data_x, data_y)
 
-    ggsave("results/nodes.pdf", device='pdf', units="in", scale=S, width=W, height=H,
+    ggsave("plots/nodes.pdf", device='pdf', units="in", scale=S, width=W, height=H,
         ggplot(data_c, aes(x=nodes,y=total, color=factor(type), shape=factor(type))) +
         geom_point(size=point_size) +
         geom_line(linewidth=line_size) +
@@ -86,10 +99,12 @@ data_real = rbind(data_cpu_real, data_gpu_real)
     )
 }
 
+for (m in c("NVIDIA RTX 3070 Laptop GPU", "NVIDIA Tesla A100 GPU"))
 {
     data_c = data
 
     data_c = subset(data_c, max_time == 100)
+    data_c = subset(data_c, type == m)
     data_c = subset(data_c, nodes %in% c(200, 400, 600, 800, 1000))
     data_c = subset(data_c, formula_size %in% c(4, 9, 24, 49))
     data_c = subset(data_c, sample_count %in% c(4*10^6, 6*10^6, 8*10^6, 10*10^6))
@@ -101,7 +116,7 @@ data_real = rbind(data_cpu_real, data_gpu_real)
 
     data_c$sample_count = factor(c("4M", "6M", "8M", "10M"), levels=c("4M", "6M", "8M", "10M"))
 
-    ggsave("results/nodes-compilation-big.pdf", device='pdf', units="in", scale=S, width=W, height=H,
+    ggsave(paste0("plots/nodes-compilation-big-", m, ".pdf"), device='pdf', units="in", scale=S, width=W, height=H,
         ggplot(data_c, aes(x=nodes,y=ratio, color=sample_count, shape=sample_count)) +
         geom_point(size=point_size) +
         geom_line(linewidth=line_size) +
@@ -130,13 +145,13 @@ data_real = rbind(data_cpu_real, data_gpu_real)
 
     for (n in c("cellcycle", "Montagud", "sizek"))
     {
-        norm = as.numeric(norms[norms$type == "CPU" & norms$name == n, ]["total"])
+        norm = as.numeric(norms[norms$type == "Intel Xeon Gold 6130 CPU" & norms$name == n, ]["total"])
         data_c <- transform(data_c, nn = ifelse(norms$name == n, norm, nn))
         data_c <- transform(data_c, diff = ifelse(norms$name == n, total - norm, diff))
         data_c <- transform(data_c, speedup = ifelse(norms$name == n, norm / total, speedup))
     }
 
-    ggsave("results/real.pdf", device='pdf', units="in", scale=S, width=W, height=H,
+    ggsave("plots/real.pdf", device='pdf', units="in", scale=S, width=W, height=H,
         ggplot(data_c, aes(x=type, y=total, fill=type)) +
         geom_bar(stat="identity", position=position_dodge()) +
         geom_errorbar(aes(ymin=total, ymax=(total - diff)), width=.1) + 
@@ -152,18 +167,17 @@ data_real = rbind(data_cpu_real, data_gpu_real)
     )
 }
 
-data_mpi = read.csv('results/mpi_out_real.csv', header=T, sep=';')
-names(data_mpi)[names(data_mpi) == "parsing"] <- "compilation"
-data_mpi = average(data_mpi)
+data <- read.table('data/mpi_real.tsv', header=T)
+data <- subset(data, algorithm %in% c('mpi', 'new'))
 
-data_mpi["algorithm"] = "MPI"
+data$algorithm <- factor(data$algorithm, levels=c('mpi', 'new'), labels=c('MPI', 'CPU'))
 
-ggsave("results/sizek_mpi.pdf", units="in", width=7, height=5,
-ggplot(data_mpi, aes(threads * mpi_nodes, total, color=algorithm, shape=algorithm, group=algorithm)) +
+ggsave("plots/sizek_mpi.pdf", units="in", width=7, height=5,
+ggplot(data, aes(cpus, time, color=algorithm, shape=algorithm, group=algorithm)) +
   geom_point() +
-  stat_smooth(geom='line', method='lm') +
+  stat_smooth(geom='line', method='loess') +
   scale_x_log10("Cores (log-scale)") +
-  scale_y_log10("Wall time (log-scale)") +
+  scale_y_log10("Wall time (log-scale)", labels=c(expression('10'^1*' s'),expression('10'^2*' s'),expression('10'^3*' s'),expression('10'^4*' s')), breaks=c(10,100,1000,10000)) +
   scale_color_brewer("Software", palette='Dark2') +
   scale_shape("Software") +
   theme_cowplot(font_size=9) +
@@ -172,18 +186,16 @@ ggplot(data_mpi, aes(threads * mpi_nodes, total, color=algorithm, shape=algorith
   )
 )
 
-data_mpi = read.csv('results/mpi_out_synth.csv', header=T, sep=';')
-names(data_mpi)[names(data_mpi) == "parsing"] <- "compilation"
-data_mpi = average(data_mpi)
+data <- read.table('data/mpi_synth.tsv', header=T)
 
-data_mpi["algorithm"] = "MPI"
+data$algorithm <- factor(data$algorithm, levels=c('mpi'), labels=c('MPI'))
 
-ggsave("results/synth_mpi.pdf", units="in", width=7, height=5,
-ggplot(data_mpi, aes(threads * mpi_nodes, total, color=algorithm, shape=algorithm, group=algorithm)) +
+ggsave("plots/synth_mpi.pdf", units="in", width=7, height=5,
+ggplot(data, aes(cpus, time, color=algorithm, shape=algorithm, group=algorithm)) +
   geom_point() +
   stat_smooth(geom='line', method='lm') +
   scale_x_log10("Cores (log-scale)") +
-  scale_y_log10("Wall time (log-scale)") +
+  scale_y_log10("Wall time (log-scale)", labels=c(expression('1 x 10'^3*' s'),expression('3 x 10'^3*' s'),expression('1 x 10'^4*' s'),expression('3 x 10'^4*' s')), breaks=c(1000,3000,10000,30000)) +
   scale_color_brewer("Software", palette='Dark2') +
   scale_shape("Software") +
   theme_cowplot(font_size=9) +
@@ -192,12 +204,10 @@ ggplot(data_mpi, aes(threads * mpi_nodes, total, color=algorithm, shape=algorith
   )
 )
 
-data_mpi["cpus"] = data_mpi["threads"] * data_mpi["mpi_nodes"]
-min_cpus = min(data_mpi["cpus"])
-min_cpus_time = data_mpi[data_mpi["cpus"] == min_cpus, "total"]
+base = 69895
 
-ggsave("results/synth_mpi_speedup.pdf", units="in", width=7, height=5,
-ggplot(data_mpi, aes(cpus, min_cpus *(min_cpus_time / total), color=algorithm, shape=algorithm, group=algorithm)) +
+ggsave("plots/synth_mpi_speedup.pdf", units="in", width=7, height=5,
+ggplot(data, aes(cpus, 32 *(base / time), color=algorithm, shape=algorithm, group=algorithm)) +
   geom_point() +
   stat_smooth(geom='line', method='lm') +
   scale_x_log10("Cores (log-scale)") +
