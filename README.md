@@ -90,7 +90,7 @@ The measured data and plots were stored in the `presented-results` directory. Th
 | --------------------------- | ----------- | -- |
 | `real.pdf`| GPU benchmark on real-world dataset | Figure 1
 | `sizek_mpi.pdf`| MPI benchmark on real-world dataset | Figure 4 
-| `synth_mpi_speedup.pdf`| MPI speedup on synthetic dataset | Figure 5
+| `synth_mpi_speedup.pdf`| MPI strong-scaling speedup on synthetic dataset | Figure 5
 | `synth_mpi.pdf`| MPI wall time on synthetic dataset | not included
 | `nodes.pdf`|GPU benchmark on synthetic dataset |  Figure 2
 | `nodes-compilation-big-NVIDIA RTX 3070 Laptop GPU.pdf`| Laptop GPU runtime compilation benchmark |   not included
