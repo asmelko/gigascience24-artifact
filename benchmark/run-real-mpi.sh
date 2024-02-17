@@ -6,7 +6,7 @@ out_file=mpi_out_real.csv
 data_dir=data
 
 threads_to_test="20"
-max_mpi_nodes=10
+max_mpi_nodes=64
 
 mkdir -p ${results_dir}
 

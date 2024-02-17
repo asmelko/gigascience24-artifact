@@ -6,7 +6,7 @@ out_file=mpi_out_synth.csv
 data_dir=data
 
 threads_to_test="32"
-max_mpi_nodes=10
+max_mpi_nodes=192
 
 mkdir -p ${results_dir}
 

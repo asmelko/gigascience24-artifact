@@ -57,9 +57,9 @@ sudo R -e "install.packages(c('ggplot2', 'cowplot', 'sitools', 'viridis', 'dplyr
 
 ## Running the experiments
 
-Our experiments are designed to provide a comprehensive analysis of the aforementioned algorithms running various combinations of parameters computing different sizes of input instances. Therefore, the overall duration of **running the experiments is quite long** (about **24 hours** on our GPU cluster and MareNostrum SC).
+Our experiments are designed to provide a comprehensive analysis of the aforementioned algorithms running various combinations of parameters computing different sizes of input instances. Therefore, the overall duration of **running the experiments is quite long** (around **2 to 3 days** on our GPU cluster and MareNostrum SC).
 
-To provide a swift way to check the reproducibility of our experiments, we prepared a special script that runs only a subset of benchmarks.
+To provide a swift way to check the reproducibility of our experiments, we prepared a special script that runs only a subset of the benchmarks.
 
 **Kick the tires:**
 
