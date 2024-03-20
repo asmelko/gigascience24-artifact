@@ -13,7 +13,7 @@ function runonce {
   for r in {1..5}
   do
     printf "$2;$3;$4;$5;" >> ${results_dir}/${out_file}
-    ${build_dir}/MaBoSSG ${1}.bnd ${1}.cfg  2>&1 | grep "main>" | tail -n3 | cut -c52-62 | awk '{$1=$1;print}' | tr '\n' ';' >> ${results_dir}/${out_file}
+    ${build_dir}/MaBoSS.GPU ${1}.bnd ${1}.cfg  2>&1 | grep "main>" | tail -n3 | cut -c52-62 | awk '{$1=$1;print}' | tr '\n' ';' >> ${results_dir}/${out_file}
     echo >> ${results_dir}/${out_file}
   done
 }

@@ -11,15 +11,15 @@ The artifact comprises the following directories:
 * `plots` -- scripts for generating results plots	
 * `presented-results` -- plots (including some that were not included in the paper), CSV data files with measurements and R script that generated the plots from the data
 * `repos` -- all the implementations of cross-correlation
-  - `MaBoSSG` -- GPU code (located under `src`)
-  - `MaBoSS-env-2.0` -- CPU and MPI code (located under `engine/src`)
+  - `MaBoSS.GPU` -- GPU code (located under `src`)
+  - `MaBoSS` -- CPU and MPI code (located under `engine/src`)
 
 
 ## Detailed artifact contents
 
-`repo/MaBoSSG/src` directory contains the source files to the CUDA kernels. Notably, the runtime compilation optimization can be viewed in `kernel_compiler.h/cpp` and `generator.h/cpp` source files, the simulation part in `jit_kernels/simulation.cu` and the stats computation part in `jit_kernels/final_states.cu` and `jit_kernels/window_average_small.cu`.
+`repo/MaBoSS.GPU/src` directory contains the source files to the CUDA kernels. Notably, the runtime compilation optimization can be viewed in `kernel_compiler.h/cpp` and `generator.h/cpp` source files, the simulation part in `jit_kernels/simulation.cu` and the stats computation part in `jit_kernels/final_states.cu` and `jit_kernels/window_average_small.cu`.
 
-MPI implementation of CPU MaBoSS code can be found by searching for the `MPI_COMPAT` keyword in `repo/MaBoSS-env-2.0/engine/src` directory.
+MPI implementation of CPU MaBoSS code can be found by searching for the `MPI_COMPAT` keyword in `repo/MaBoSS/engine/src` directory.
 
 
 ## Requirements for running the experiments

@@ -3,14 +3,14 @@
 ########## Build ##########
 
 # Build GPU version of MaBoSS
-cmake -DCMAKE_BUILD_TYPE=Release -DMAX_NODES=1024 -B build/MaBoSS-GPU -S repos/MaBoSSG
+cmake -DCMAKE_BUILD_TYPE=Release -DMAX_NODES=1024 -B build/MaBoSS-GPU -S repos/MaBoSS.GPU
 cmake --build build/MaBoSS-GPU
 
 # Build CPU version of MaBoSS
-make -C repos/MaBoSS-env-2.0/engine/src clean
-make -C repos/MaBoSS-env-2.0/engine/src MAXNODES=1024 -j `nproc`
+make -C repos/MaBoSS/engine/src clean
+make -C repos/MaBoSS/engine/src MAXNODES=1024 -j `nproc`
 mkdir -p build/MaBoSS-CPU
-cp repos/MaBoSS-env-2.0/engine/src/MaBoSS_1024n build/MaBoSS-CPU/MaBoSS_1024n
+cp repos/MaBoSS/engine/src/MaBoSS_1024n build/MaBoSS-CPU/MaBoSS_1024n
 
 ########## Build ##########
 
@@ -30,7 +30,7 @@ function runonce {
   for r in {1..5}
   do
     printf "$2;$3;$4;" >> ${results_dir}/${out_file}
-    ${build_dir}/MaBoSSG ${1}.bnd ${1}.cfg  2>&1 | grep "main>" | tail -n3 | cut -c52-62 | awk '{$1=$1;print}' | tr '\n' ';' >> ${results_dir}/${out_file}
+    ${build_dir}/MaBoSS.GPU ${1}.bnd ${1}.cfg  2>&1 | grep "main>" | tail -n3 | cut -c52-62 | awk '{$1=$1;print}' | tr '\n' ';' >> ${results_dir}/${out_file}
     echo >> ${results_dir}/${out_file}
     printf "."
   done

@@ -40,7 +40,7 @@
 # Author: Eric Viara
 # Date: Jan 2017
 #
-# Check MaBoSS-env-2.0 requirements
+# Check MaBoSS requirements
 #
 
 typeset -i error=0
@@ -112,7 +112,7 @@ fi
 echo
 
 error=0
-tbchecked="MaBoSS-env-2.0 tools requirements"
+tbchecked="MaBoSS tools requirements"
 echo Checking ${tbchecked}...
 echo
 
