@@ -1,6 +1,6 @@
 # Artifact Submission: HPC MaBoSS 
 
-This is a replication package containing code and experimental results related to a GigaScience paper titled: MaBoSS for HPC environments: Implementations of the continuous time Boolean model simulator for large CPU clusters and GPU accelerators.
+This is a replication package containing code and experimental results related to the paper titled: MaBoSS for HPC environments: Implementations of the continuous time Boolean model simulator for large CPU clusters and GPU accelerators.
 
 ## Overview
 
