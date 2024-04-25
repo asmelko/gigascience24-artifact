@@ -51,7 +51,7 @@ sudo dnf install -y cmake gcc-c++ R flex bison mpich
 
 R packages necessary for generating the plots:
 ```
-sudo R -e "install.packages(c('ggplot2', 'cowplot', 'sitools', 'viridis', 'dplyr'), repos='https://cloud.r-project.org')"
+R -e "install.packages(c('ggplot2', 'cowplot', 'sitools', 'viridis', 'dplyr'), repos='https://cloud.r-project.org')"
 ```
 
 
