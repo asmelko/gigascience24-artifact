@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --time=240:00:00           # walltime for the job in format (days-)hours:minutes:seconds
+#SBATCH --time=10:00:00           # walltime for the job in format (days-)hours:minutes:seconds
 #SBATCH --nodes=64               
 #SBATCH --cpus-per-task=32         # cpus per tasks
 #SBATCH --mem=64000               # memory resource per node
