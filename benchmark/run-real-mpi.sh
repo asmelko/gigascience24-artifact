@@ -1,12 +1,17 @@
 #!/bin/bash
 
+#SBATCH --time=240:00:00           # walltime for the job in format (days-)hours:minutes:seconds
+#SBATCH --nodes=64               
+#SBATCH --ntasks-per-node=32      # processes per node
+#SBATCH --mem=64000               # memory resource per node
+
 build_dir=build/MaBoSS-MPI
 results_dir=results
 out_file=mpi_out_real.csv
 data_dir=data
 
-threads_to_test="20"
-max_mpi_nodes=64
+threads_to_test="32"
+mpi_nodes="1 2 4 8 16 32 64"
 
 mkdir -p ${results_dir}
 

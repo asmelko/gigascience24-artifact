@@ -5,7 +5,7 @@ results_dir=results
 out_file=cpu_out_real.csv
 data_dir=data
 
-threads_to_test="32 64"
+threads_to_test="1 2 4 8 16 32 48 64"
 
 mkdir -p ${results_dir}
 
@@ -23,6 +23,4 @@ function runonce {
   done
 }
 
-runonce ${data_dir}/cellcycle cellcycle 10 1000000
-runonce ${data_dir}/Montagud2022_Prostate_Cancer Montagud 133 1000000
 runonce ${data_dir}/sizek sizek 87 1000000
