@@ -17,4 +17,4 @@ echo Creating synthetic data
 ./make-data.sh
 
 echo Running MPI version of MaBoSS on synthetic data
-sbatch ./benchmark/run-synth-mpi.sh
+./benchmark/run-synth-mpi.sh
