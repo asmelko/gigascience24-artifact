@@ -11,7 +11,7 @@ mpi_nodes="1 2 4 8 16 32 64 96 128 160 192"
 mkdir -p ${results_dir}
 
 function runonce {
-  sbatch -N $2 --ntasks-per-node 8 --ntasks-per-socket 1 -c 16 --mem 64  ${build_dir}/MaBoSS_1024n ${1}.bnd -c ${1}.cfg -e thread_count=16 -o ${build_dir}/res | cut -f2 -d' ' | tr '\n' ';' >> ${results_dir}/${out_file}${2}
+  sbatch -N $2 --ntasks-per-node 8 --ntasks-per-socket 1 -c 16 --mem 64 -t 12:00:00  ${build_dir}/MaBoSS_1024n ${1}.bnd -c ${1}.cfg -e thread_count=16 -o ${build_dir}/res | cut -f2 -d' ' | tr '\n' ';' >> ${results_dir}/${out_file}${2}
 }
 
 for m in ${mpi_nodes}
