@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --time=10:00:00           # walltime for the job in format (days-)hours:minutes:seconds
+#SBATCH --time=24:00:00           # walltime for the job in format (days-)hours:minutes:seconds
 #SBATCH --nodes=192               
 #SBATCH --cpus-per-task=64         # cpus per tasks
 #SBATCH --mem=64000               # memory resource per node
@@ -33,4 +33,4 @@ function runonce {
   done
 }
 
-runonce ${data_dir}/synth-100t-100n-4f-10000000s 100 100 4 10000000
+runonce ${data_dir}/synth-100t-1000n-4f-100000000s 100 1000 4 100000000

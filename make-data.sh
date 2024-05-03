@@ -37,3 +37,5 @@ do
     done
   done
 done
+
+python3 ${data_dir}/generate-synth.py --signal_length 4 --nodes 1000 --sample_count 100000000 ${data_dir}/synth-100t-1000n-4f-100000000s
