@@ -13,14 +13,8 @@ mkdir -p build/MaBoSS-MPI
 cp repos/MaBoSS/engine/src/MaBoSS_1024n build/MaBoSS-MPI/MaBoSS_1024n
 
 
-echo Running CPU version of MaBoSS on real data
-sbatch ./benchmark/run-real-cpu.sh
-
 echo Creating synthetic data
 ./make-data.sh
-
-echo Running MPI version of MaBoSS on real data
-sbatch ./benchmark/run-real-mpi.sh
 
 echo Running MPI version of MaBoSS on synthetic data
 sbatch ./benchmark/run-synth-mpi.sh
