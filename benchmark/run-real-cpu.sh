@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#SBATCH --time=240:00:00           # walltime for the job in format (days-)hours:minutes:seconds
+#SBATCH --ntasks-per-node=64      # processes per node
+#SBATCH --mem=64000               # memory resource per node
+
 build_dir=build/MaBoSS-CPU
 results_dir=results
 out_file=cpu_out_real.csv
