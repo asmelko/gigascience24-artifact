@@ -27,4 +27,4 @@ function runonce {
   done
 }
 
-runonce ${data_dir}/synth-100t-100n-4f-10000000s 100 100 4 10000000
+runonce ${data_dir}/synth-1000t-100n-4f-100000000s 1000 100 4 100000000

@@ -16,6 +16,7 @@ for i in {1000000..10000000..1000000}
 do 
   python3 ${data_dir}/generate-synth.py --signal_length 4 --nodes 100 --sample_count $i ${data_dir}/synth-100t-100n-4f-${i}s
 done
+python3 ${data_dir}/generate-synth.py --signal_length 4 --nodes 100 --sample_count $i ${data_dir}/synth-100t-100n-4f-100000000s
 
 for i in {100..1000..100}
 do 
